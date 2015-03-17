@@ -146,8 +146,8 @@ sub main {
     # Clear MongoDB collection before running
     if( defined $mongo ) {
 	my $mc  = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-	my $mdb = $mongoclient->get_database( $database );
-	my $mcl = $mongodb->get_collection( $collection );
+	my $mdb = $mc->get_database( $database );
+	my $mcl = $mdb->get_collection( $collection );
 	$mcl->remove(); # YES, we remove all from collection first...
     }
 
