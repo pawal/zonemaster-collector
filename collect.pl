@@ -2,13 +2,14 @@
 
 use 5.014002;
 
-use forks;
+#use forks;
 use strict;
 use warnings;
 
 use MongoDB;
 use Zonemaster;
 use Zonemaster::Logger::Entry;
+use Thread;
 use Thread::Queue;
 use Term::ANSIColor;
 use JSON -support_by_pp;
@@ -27,26 +28,8 @@ my $database;           # which MongoDB database
 my $collection;         # which MongoDB collection, WARNING - will be ERASED
 
 # runtime variables
-my $mongoclient;
-my $mongodb;
-my $mongocoll;
 my $queue = Thread::Queue->new();
 my %numeric = Zonemaster::Logger::Entry->levels;
-
-$SIG{PIPE} = \&nullHandler;
-$SIG{INT}  = \&friendlyQuit;
-
-# handle PIPE signal
-sub tonull {
-    say "SIGPIPE received";
-}
-
-# handle SIGINT
-sub friendlyQuit {
-    # TODO: can we do something better?
-    print color 'reset';
-    print "Quitting\n";
-}
 
 sub runQueue {
     if ( defined $outdir ) {
@@ -64,16 +47,21 @@ sub runQueue {
     close FILE;
 
     say "Creating threads";
-    threads->create( {'stack_size' => 32*4096}, 'processDomain' ) for ( 1 .. $parallel );
+    threads->create( {}, 'processDomain' ) for ( 1 .. $parallel );
 
-    while( threads->list(threads::running) != 0 and $queue->pending() ) {
+    # print status while there are running threads
+    while( threads->list(threads::running) != 0 ) {
 	print color 'yellow';
 	print "Pending: ".$queue->pending()." - Running: ".threads->list( threads::running )."\n";
 	print color 'reset';
 	sleep( 2 );
     }
+
+    # end running queue
     print color 'red';
-    print "Waiting to finish the last items in the queue\n";
+    say "Waiting to finish the last items in the queue";
+    # TODO: for some reasons this join() stuff sigfaults on my machine...
+    # searching the web indicates an internal glibc problem
     $_->join foreach threads->list; #block until all threads done
     print color 'reset';
 }
@@ -83,7 +71,7 @@ sub runTest {
     my ( $domain ) = @_;
     my @log;
     print color 'reset';
-    say $domain;
+    say threads->tid().": $domain";
     eval {
 	Zonemaster->reset();
 	@log = Zonemaster->test_zone( $domain );
@@ -96,16 +84,24 @@ sub runTest {
 }
 
 sub processDomain {
-    while (defined(my $domain = $queue->dequeue_nb)) {
-	chomp $domain;
-	my $result = runTest( $domain );
+    # init mongodb connection first in thread
+    my ( $mongoclient, $mongodb, $mongocoll);
+    if( defined $mongo and not defined $mongoclient) {
+	say "Connecting to MongoDB" if $DEBUG;
+	$mongoclient = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+	$mongodb     = $mongoclient->get_database( $database );
+	$mongocoll   = $mongodb->get_collection( $collection );
+	#	$mongocoll->remove(); # YES, we remove all from collection first...
+    }
 
-	if( defined $mongo and not defined $mongoclient) {
-	    $mongoclient = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-	    $mongodb     = $mongoclient->get_database( $database );
-	    $mongocoll   = $mongodb->get_collection( $collection );
-	    #	$mongocoll->remove(); # YES, we remove all from collection first...
-	}
+    # begin dequeuing and processing
+    while ( defined ( my $domain = $queue->dequeue_nb ) ) {
+	chomp $domain;
+	$domain =~ s/(.*)\.$/$1/;        # drop terminating dot
+	return if not length( $domain ); # can be root or empty line
+
+	# run actual test
+	my $result = runTest( $domain );
 
 	# output result
 	if( defined $outdir ) {
@@ -117,6 +113,8 @@ sub processDomain {
 	    $mongocoll->insert( { 'name' => $domain, 'result' => $result } );
 	}
     }
+    say "Ending thread" if $DEBUG;
+    threads->exit();
 }
 
 sub main {
@@ -146,8 +144,8 @@ sub main {
     # Clear MongoDB collection before running
     if( defined $mongo ) {
 	my $mc  = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-	my $mdb = $mongoclient->get_database( $database );
-	my $mcl = $mongodb->get_collection( $collection );
+	my $mdb = $mc->get_database( $database );
+	my $mcl = $mdb->get_collection( $collection );
 	$mcl->remove(); # YES, we remove all from collection first...
     }
 
