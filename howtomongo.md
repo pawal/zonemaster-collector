@@ -17,6 +17,10 @@ These tests assume that you have your results in the "domains" collection.
 
     db.domains.count()
 
+or get the list of domains with only the name:
+
+    db.domains.find( {}, { "name": 1, "_id": 0 } );
+
 **How many domains have warnings?**
 
     db.domains.find({result: { $elemMatch: { level: 'ERROR' }}}).count()
@@ -42,7 +46,7 @@ use the iterator command "it" to page through them.
 **Use aggregate to get all matching log entries with a certain error level:**
 
     db.domains.aggregate(
-      { $match: { "name": "example.com", "result.level": "ERROR" } },
+      { $match: { "result.level": "ERROR" } },
       { $unwind: "$result" },
       { $match: {"result.level": "ERROR"}},
       { $project: { "name":1, "result": 1, "_id": 0 }} );
@@ -68,8 +72,25 @@ To specify a single domain name to see the ERRORs for:
         { $limit : 25 }
       ]
     );
-		    
+
+**Calculate total numbers of "errors" grouped by level for domain**
+
+TODO
+
+    db.domains.aggregate([
+      { $unwind : "$result" },
+      { $group: {
+        "_id": {
+          "name": "$name",
+          "level": "$result.level"
+        },
+        "total": { "$sum": 1 }
+      } },
+    ]);
+
 **Get the toplist of most popular set of name servers:**
+
+(Requires log data on the DEBUG level.)
 
     db.domains.aggregate(
       { $match: { "result.tag": "HAS_GLUE" } },
@@ -83,19 +104,57 @@ To specify a single domain name to see the ERRORs for:
 
 **Get the toplist of most popular set of name servers with ERRORs:**
 
+(Requires log data on the DEBUG level.)
+
     db.domains.aggregate(
-      { $match: { "result.tag": "HAS_GLUE", "result.level": "ERROR" } },
-      { $unwind : "$result" },
-      { $match: { "result.tag": "HAS_GLUE" } },
-      { $project: { "name": 1, "result.args": 1, "_id": 0 } },
+      { $match: { "result.level": "ERROR" } },
+      { $unwind: "$result" },
+      { $match: { "result.level": "ERROR" } },
+      { $match: { "result.args.ns": { $exists: true } } },
+      { $project: { "name":1, "result": 1, "_id": 0 } },
       { $group: { _id: "$result.args.ns", nscount: { $sum: 1 } } },
+      { $sort: { nscount: -1 } },
+      { $limit: 25 }
+    );
+
+
+With CRITICAL (harder because lack of nsset, can match source sometimes):
+
+    db.domains.aggregate(
+      { $match: { "result.level": "CRITICAL" } },
+      { $unwind : "$result" },
+      { $project: { "name": 1, "result.args": 1, "_id": 0 } },
+      { $match: { "result.args.source": { $exists: true } } },
+      { $group: { _id: "$result.args.source", nscount: { $sum: 1 } } },
       { $sort : { nscount : -1 } },
       { $limit: 25 }
     );
 
+
+**Find the name of a CRITICAL domain with a certain nameserver-set:**
+
+    db.domains.aggregate(
+      { $match: { "result.level": "CRITICAL" } },
+      { $match: { "result.args.source": "ns1.svenska-domaner.se/46.22.119.39" } },
+      { $project: { "name": 1, "_id": 0 } }
+    );
+
+
+**Find domains with a certain nameserver that has ERROR:**
+
+    db.domains.aggregate(
+      { $match: { "result.level": "ERROR" } },
+      { $unwind: "$result" },
+      { $match: { "result.level": "ERROR" } },
+      { $match: { "result.args.ns": "ns5.binero.se" } },
+      { $sort: { "name": 1 } },
+      { $project: { "name":1, "result.tag": 1, "result.args": 1, "_id": 0 } }
+    );
+
+
 **Get the toplist of most common errors:**
 
-    db.tlds.aggregate(
+    db.domains.aggregate(
       { $unwind: "$result" },
       { $match: { "result.level": "ERROR" } },
       { $group: { _id: "$result.tag", errors: { $sum: 1 } } },
@@ -103,6 +162,53 @@ To specify a single domain name to see the ERRORs for:
       { $limit: 25 }
     );
 
+
+**Find name servers that are open resolvers, and count domains using them:**
+
+    db.domains.aggregate(
+      { $match: { "result.tag": "IS_A_RECURSOR" } },
+      { $unwind: "$result" },
+      { $match: { "result.tag": "IS_A_RECURSOR" } },
+      { $project: { "name":1, "result": 1, "_id": 0 } },
+      { $group: { _id: "$result.args.ns", nscount: { $sum: 1 } } },
+      { $sort: { nscount: -1 } },
+      { $limit: 25 }
+    );
+
+
+**Find name servers that have name servers that are not reachable, NS_FAILED:**
+
+    db.domains.aggregate(
+      { $match: { "result.tag": "NS_FAILED" } },
+      { $unwind: "$result" },
+      { $match: { "result.tag": "NS_FAILED" } },
+      { $project: { "name":1, "result": 1, "_id": 0 } },
+      { $group: { _id: "$result.args.source", nscount: { $sum: 1 } } },
+      { $sort: { nscount: -1 } },
+      { $limit: 25 }
+    );
+
+
+**Find all domains that has a result tag ...**
+
+    db.domains.aggregate(
+      { $match: { "result.tag": "NAMESERVER_NO_TCP_53" } },
+      { $unwind : "$result" },
+      { $match: { "result.tag": "NAMESERVER_NO_TCP_53" } },
+      { $project: { "name": 1, "result.tag": 1, "result.args": 1, "_id": 0 } }
+    );
+
+
+**Group all error levels and count them:**
+
+TODO
+
+    db.domains.aggregate(
+      { $unwind : "$result" },
+      { $project: { "name": 1, "result.level": 1, "_id": 0 } },
+      { $group: { _id: "$result.level", count: { $sum: 1 } } },
+      { $sort : { NScount : -1 } }
+    );
 
 ## Add indices
 
