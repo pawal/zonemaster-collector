@@ -48,4 +48,3 @@ Other Perl modules:
 
  * Term::ANSIColor (for "fancy" output)
  * JSON Perl
- * forks (since Zonemaster is not yet 100% thread safe due to Net::LDNS)
