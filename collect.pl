@@ -26,6 +26,7 @@ my $filename;           # or filename
 my $mongo;              # use MongoDB storage
 my $database;           # which MongoDB database
 my $collection;         # which MongoDB collection, WARNING - will be ERASED
+my $append   = 0;       # Don't empty storage before running
 
 # runtime variables
 my $queue = Thread::Queue->new();
@@ -128,6 +129,7 @@ sub main {
 	        'mongo'        => \$mongo,
 	        'collection=s' => \$collection,
 	        'db=s'         => \$database,
+		'append'       => \$append,
 	        'threads=i'    => \$parallel,
 	        'level|l=s'    => \$level,
 	        'debug'        => \$DEBUG )
@@ -146,7 +148,7 @@ sub main {
 	my $mc  = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 	my $mdb = $mc->get_database( $database );
 	my $mcl = $mdb->get_collection( $collection );
-	$mcl->remove(); # YES, we remove all from collection first...
+	$mcl->remove() unless $append; # YES, we remove all from collection first (unless append)
     }
 
     if( defined $name ) {
@@ -177,6 +179,7 @@ collect.pl
     --mongo         store results in MongoDB
     --db            which MongoDB database
     --collection    which MongoDB collection
+    --append        don't clear storage before running
     --threads       number of threads
     --level         Zonemaster severity level (default, DEBUG)
     --debug         debug mode
