@@ -81,7 +81,8 @@ sub runTest {
 	my $err = $@;
 	say STDERR "Exited early for $domain: " . $err->message;
     }
-    return Zonemaster->logger->json( $level );
+    my $maxlevel = Zonemaster::logger->get_max_level();
+    return ( Zonemaster->logger->json( $level ), $maxlevel );
 }
 
 sub processDomain {
@@ -102,7 +103,7 @@ sub processDomain {
 	return if not length( $domain ); # can be root or empty line
 
 	# run actual test
-	my $result = runTest( $domain );
+	my ( $result, $level ) = runTest( $domain );
 
 	# output result
 	if( defined $outdir ) {
@@ -111,7 +112,9 @@ sub processDomain {
 	    close(OUT);
 	} elsif ( defined $mongo ) {
 	    $result = JSON->new->utf8->decode( $result );
-	    $mongocoll->insert( { 'name' => $domain, 'result' => $result } );
+	    $mongocoll->insert( { 'name' => $domain,
+				  'level' => $level,
+				  'result' => $result } );
 	}
     }
     say "Ending thread" if $DEBUG;
