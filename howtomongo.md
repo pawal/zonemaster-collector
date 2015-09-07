@@ -13,6 +13,7 @@ This selects your results database, and you can look at your collections.
 
 These tests assume that you have your results in the "domains" collection.
 
+
 **How many domains are tested in this collection?**
 
     db.domains.count()
@@ -21,13 +22,15 @@ or get the list of domains with only the name:
 
     db.domains.find( {}, { "name": 1, "_id": 0 } );
 
+
 **How many domains have warnings?**
 
-    db.domains.find({result: { $elemMatch: { level: 'ERROR' }}}).count()
+    db.domains.find({result: { $elemMatch: { level: 'WARNING' }}}).count()
 
 or
 
     db.domains.find({ "result.level": "WARNING" }, { "name": 1, "_id": 0 } )
+
 
 **Find all domains that have ERRORS, and list one of the errors:**
 
@@ -38,10 +41,16 @@ or
 The queries that gives you a lot of results will give you a very long list,
 use the iterator command "it" to page through them.
 
+
 **Find all domains using a certain name server:**
 
     db.domains.find({ "result.args.ns": "ns.example.com"},
       { "name": 1, "result.$.args": 1, "_id": 0 } );
+
+(This depends on Zonemaster logging something with result.args.ns, the project is
+working on cleaning up the names in the logging and harmonizing the results.
+https://github.com/dotse/zonemaster-engine/issues/102)
+
 
 **Use aggregate to get all matching log entries with a certain error level:**
 
@@ -61,7 +70,10 @@ To specify a single domain name to see the ERRORs for:
       { $unwind: "$result" },
       { $match: {"result.level": "ERROR" } } );
 
+
 **Get the toplist of domains with most errors:**
+
+Not very useful, but a good example of the query langague used.
 
     db.domains.aggregate(
       [
@@ -73,9 +85,8 @@ To specify a single domain name to see the ERRORs for:
       ]
     );
 
-**Calculate total numbers of "errors" grouped by level for domain**
 
-TODO
+**Calculate total numbers of "errors" grouped by level for domain**
 
     db.domains.aggregate([
       { $unwind : "$result" },
@@ -88,16 +99,18 @@ TODO
       } },
     ]);
 
+
 **Get the toplist of most popular set of name servers:**
 
-(Requires log data on the DEBUG level.)
+(Requires log data on the DEBUG level, and depends on args.nsnlist to be the the
+set of name servers.)
 
     db.domains.aggregate(
       { $match: { "result.tag": "HAS_GLUE" } },
       { $unwind : "$result" },
       { $match: { "result.tag": "HAS_GLUE" } },
       { $project: { "name": 1, "result.args": 1, "_id": 0 } },
-      { $group: { _id: "$result.args.ns", nscount: { $sum: 1 } } },
+      { $group: { _id: "$result.args.nsnlist", nscount: { $sum: 1 } } },
       { $sort : { nscount : -1 } },
       { $limit: 25 }
     );
@@ -109,24 +122,23 @@ TODO
     db.domains.aggregate(
       { $match: { "result.level": "ERROR" } },
       { $unwind: "$result" },
-      { $match: { "result.level": "ERROR" } },
-      { $match: { "result.args.ns": { $exists: true } } },
+      { $match: { "result.args.nsnlist": { $exists: true } } },
       { $project: { "name":1, "result": 1, "_id": 0 } },
-      { $group: { _id: "$result.args.ns", nscount: { $sum: 1 } } },
+      { $group: { _id: "$result.args.nsnlist", nscount: { $sum: 1 } } },
       { $sort: { nscount: -1 } },
       { $limit: 25 }
     );
 
 
-With CRITICAL (harder because lack of nsset, can match source sometimes):
+Same with CRITICAL (harder because lack of nsset, can match source sometimes):
 
     db.domains.aggregate(
       { $match: { "result.level": "CRITICAL" } },
-      { $unwind : "$result" },
-      { $project: { "name": 1, "result.args": 1, "_id": 0 } },
-      { $match: { "result.args.source": { $exists: true } } },
-      { $group: { _id: "$result.args.source", nscount: { $sum: 1 } } },
-      { $sort : { nscount : -1 } },
+      { $unwind: "$result" },
+      { $match: { "result.args.nsnlist": { $exists: true } } },
+      { $project: { "name":1, "result": 1, "_id": 0 } },
+      { $group: { _id: "$result.args.nsnlist", nscount: { $sum: 1 } } },
+      { $sort: { nscount: -1 } },
       { $limit: 25 }
     );
 
@@ -136,6 +148,14 @@ With CRITICAL (harder because lack of nsset, can match source sometimes):
     db.domains.aggregate(
       { $match: { "result.level": "CRITICAL" } },
       { $match: { "result.args.source": "ns1.svenska-domaner.se/46.22.119.39" } },
+      { $project: { "name": 1, "_id": 0 } }
+    );
+
+or
+
+    db.domains.aggregate(
+      { $match: { "result.level": "CRITICAL" } },
+      { $match: { "result.args.nsnlist": "ns1.loopia.se.,ns2.loopia.se." } },
       { $project: { "name": 1, "_id": 0 } }
     );
 
@@ -209,6 +229,28 @@ TODO
       { $group: { _id: "$result.level", count: { $sum: 1 } } },
       { $sort : { NScount : -1 } }
     );
+
+
+**Get all unique tags from the collection:**
+
+db.domains.runCommand({ distinct: 'tlds', key: "result.tag" } )
+
+
+**Count number of domains with a certal log level:**
+
+    db.domain.group( {
+      key: { level: 1 },
+      reduce: function(cur, result) { result.count += 1 },
+      initial: { count: 0 }
+    } )
+
+**List only the log levels from current set of domains:**
+
+    db.tlds.distinct( "level" );
+
+**List the current set of log messages from all domains:**
+
+    db.tlds.distinct( "result.tag" );
 
 ## Add indices
 
