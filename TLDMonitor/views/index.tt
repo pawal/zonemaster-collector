@@ -1,0 +1,55 @@
+[% IF title != '' %]
+<h1>[% title %]</h1>
+[% ELSE %]
+<h1>All TLDs</h1>
+[% END %]
+[%
+   global.critical = 0;
+   global.error    = 0;
+   global.warning  = 0;
+   global.notice   = 0;
+   global.info     = 0;
+%]
+
+<div class="row fullWidth">
+  <table id="tldlist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="450" id="tldname">Name of TLD</th>
+	<th width="450" id="loglevel"">Log level</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+      [% FOREACH tld IN all %]
+      [% IF tld.level == 'NOTICE' %]
+      [% global.notice = global.notice + 1 %]<tr class="notice">
+      [% ELSIF tld.level == 'WARNING' %]
+      [% global.warning = global.warning + 1 %]<tr class="warning">
+      [% ELSIF tld.level == 'ERROR' %]
+      [% global.error = global.error + 1 %]<tr class="error">
+      [% ELSIF tld.level == 'CRITICAL' %]
+      [% global.critical = global.critical + 1 %]<tr class="critical">
+      [% ELSE %]
+      [% global.info = global.info + 1 %]
+      <tr>
+      [% END %]
+	<td><a href="/domain/[% tld.name %]">[% tld.name %]</a></td>
+	<td>[% tld.level %]</td>
+      </tr>
+      [% counter = loop.count %]
+      [% END %]
+    </tbody>
+  </table>
+  <h3>Total domains: [% counter %]</h3>
+  <table id="loglist" class="display compact">
+    <thead><tr><th>Log level</th><th>Count</th></tr></thead>
+    <tbody>
+      <tr><td>CRITICAL</td><td>[% global.critical %]</td></tr>
+      <tr><td>ERROR</td><td>[% global.error %]</td></tr>
+      <tr><td>WARNING</td><td>[% global.warning %]</td></tr>
+      <tr><td>NOTICE</td><td>[% global.notice %]</td></tr>
+      <tr><td>INFO</td><td>[% global.info %]</td></tr>
+    </tbody>
+  </table>
+</div>

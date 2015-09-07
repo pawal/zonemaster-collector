@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=<% settings.charset %>" />
+  <title>TLDMonitor</title>
+<!--  <link rel="stylesheet" media="all" href="<% request.uri_base %>/css/style.css" />
+  <script src="scripts/respond.min.js"></script> -->
+  <link rel="stylesheet" href="/css/foundation.css" />
+  <link rel="stylesheet" href="/css/datatables.min.css" />
+  <link rel="stylesheet" href="/css/tldmon.css" />
+  <script src="/js/vendor/modernizr.js"></script>
+</head>
+<body>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet" />
+
+<!-- navigation -->
+
+<nav class="top-bar" data-topbar role="navigation">
+  <ul class="title-area">
+
+    <div class="logo">
+      <a href="/"><img src="/img/tldmonlogo.png" /></a>
+    </div>
+    <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  </ul>
+
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right">
+      <li class=""><a href="#">Toplist Errors</a></li>
+      <li class="divider"></li>
+      <li class=""><a href="#">Toplist Nameservers</a></li>
+      <li class="divider"></li>
+      <li class="has-dropdown">
+	<a href="#">Right Button Dropdown</a>
+	<ul class="dropdown">
+	  <li><a href="#">First link in dropdown</a></li>
+	  <li class="active"><a href="#">Active link in dropdown</a></li>
+	</ul>
+      </li>
+    </ul>
+    <ul class="social-icons">
+      <li><a href=""><i class="fi-telephone"></i></a></li>
+      <li><a href=""><i class="fi-social-linkedin"></i></a></li>
+      <li><a href=""><i class="fi-social-twitter"></i></a></li>
+      <li><a href=""><i class="fi-social-facebook"></i></a></li>
+    </ul>
+
+  </section>
+</nav>
+
+<!-- content -->
+<div class="row">
+  <div class="large-11 columns">
+[% content %]
+  </div>
+</div>
+
+  <script src="/js/vendor/jquery.js"></script>
+  <script src="/js/foundation.min.js"></script>
+  <script src="/js/datatables.min.js"></script>
+  <script src="/js/vendor/fastclick.js"></script>
+  <script src="/js/tldmon.js"></script>
+</body>
+</html>

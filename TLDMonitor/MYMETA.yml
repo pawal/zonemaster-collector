@@ -1,0 +1,26 @@
+---
+abstract: 'YOUR APPLICATION ABSTRACT'
+author:
+  - 'YOUR NAME <youremail@example.com>'
+build_requires:
+  ExtUtils::MakeMaker: '0'
+configure_requires:
+  ExtUtils::MakeMaker: '0'
+dynamic_config: 0
+generated_by: 'ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.142690'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: TLDMonitor
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  Dancer: '1.314'
+  MongoDB: '0'
+  Net::IDN::Punycode: '0'
+  Test::More: '0'
+  YAML: '0'
+version: '1.0'

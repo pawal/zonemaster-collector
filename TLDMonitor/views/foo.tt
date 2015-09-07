@@ -1,0 +1,95 @@
+<nav class="top-bar foundation-bar" data-topbar>
+  <ul class="title-area">
+    <li class="name">
+      <span data-tooltip class="has-tip" title="Try resizing your browser to see how the grid stacks"><h1 class="show-for-small-only"><a href="#">Small screen</a></h1></span>
+      <span data-tooltip class="has-tip" title="Try resizing your browser to see how the grid stacks"><h1 class="show-for-medium-only"><a href="#">Medium Screen</a></h1></span>
+      <span data-tooltip class="has-tip" title="Try resizing your browser to see how the grid stacks"><h1 class="show-for-large-only"><a href="#">Large screen</a></h1></span>
+    </li>
+  </ul>
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right">
+      <li><a  href="http://foundation.zurb.com/docs/"  target="_blank">Foundation Docs</a></li>
+      <li><a  href="http://codepen.io/ZURBFoundation/full/olduj/" target="_blank">Grid Example</a></li>
+      <li class="active"><a  href="http://codepen.io/ZURBFoundation/full/vKwHa/" target="_blank">Navigation Example</a></li>
+      <li><a  href="http://codepen.io/ZURBFoundation/full/AuvoL" target="_blank">Forms</a></li>
+      <li><a  href="http://codepen.io/ZURBFoundation/full/fcFnq" target="_blank">Interchange</a></li>
+    </ul>
+  </section>
+</nav>
+
+<div class="row">
+  <div class="small-12 columns">
+
+    <div data-alert class="alert-box radius secondary">
+      <a href="http://codepen.io/ZURBFoundation/full/vKwHa/" target="_blank">Try viewing this in a separate tab and resizing your browser to see how the grid stacks →</a>
+      <a href="#" class="close">&times;</a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="small-12 columns">
+    <div class="off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+	<nav class="top-bar show-for-medium-up" data-topbar>
+	  <ul class="title-area">
+	    <li class="name">
+	      <h1><a href="#">Top Bar for Medium & Large</a></h1>
+	    </li>
+	    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+	  </ul>
+
+	  <section class="top-bar-section">
+	    <!-- Right Nav Section -->
+	    <ul class="right">
+	      <li><a href="#">Home</a></li>
+	      <li><a href="#">About</a></li>
+	      <li><a href="#">Contact</a></li>
+	    </ul>
+	  </section>
+	</nav>
+
+
+	<nav class="tab-bar show-for-small">
+	  <section class="left-small">
+	    <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+	  </section>
+
+	  <section class="middle tab-bar-section">
+	    <h1 class="title">Offcanvas for Small</h1>
+	  </section>
+
+	</nav>
+
+
+	<aside class="left-off-canvas-menu">
+	  <ul class="off-canvas-list">
+	    <li><label>Foundation</label></li>
+	    <li><a href="#">Home</a></li>
+	    <li><a href="#">About</a></li>
+	    <li><a href="#">Contact</a></li>
+	  </ul>
+	</aside>
+
+	<section class="main-section">
+	  <div class="row">
+	    <div class="large-12 columns">
+
+	      <h4 class="">The Psychohistorians</h4>
+
+	      <p>Set in the year 0 F.E. ("Foundation Era"), The Psychohistorians opens on Trantor, the capital of the 12,000-year-old Galactic Empire. Though the empire appears stable and powerful, it is slowly decaying in ways that parallel the decline of the Western Roman Empire. Hari Seldon, a mathematician and psychologist, has developed psychohistory, a new field of science and psychology that equates all possibilities in large societies to mathematics, allowing for the prediction of future events.</p>
+
+	      <p>Using psychohistory, Seldon has discovered the declining nature of the Empire, angering the aristocratic members of the Committee of Public Safety, the de facto rulers of the Empire. The Committee considers Seldon's views and statements treasonous, and he is arrested along with young mathematician Gaal Dornick, who has arrived on Trantor to meet Seldon. Seldon is tried by the Committee and defends his beliefs, explaining his theories and predictions, including his belief that the Empire will collapse in 500 years and enter a 30,000-year dark age, to the Committee's members.</p>
+
+	    </div>
+	  </div>
+	</section>
+
+	<a class="exit-off-canvas"></a>
+
+      </div>
+    </div>
+  </div>
+</div>
+

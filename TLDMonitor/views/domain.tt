@@ -1,0 +1,36 @@
+<h1>[% domain %]</h1>
+<div>
+  <table id="tldlog" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th id="logidentifier" width="150">Log identifier</th>
+	<th id="loglevel" width="80">Log level</th>
+	<th id="logdetails" width="150">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      [% FOREACH entry IN log %]
+      [% IF entry.level == 'DEBUG' %]
+      <tr class="debug">
+      [% ELSIF entry.level == 'INFO' %]
+      <tr class="info">
+      [% ELSIF entry.level == 'NOTICE' %]
+      <tr class="notice">
+      [% ELSIF entry.level == 'WARNING' %]
+      <tr class="warning">
+      [% ELSIF entry.level == 'ERROR' %]
+      <tr class="error">
+      [% ELSIF entry.level == 'CRITICAL' %]
+      <tr class="critical">
+      [% ELSE %]
+      <tr>
+      <tr>
+      [% END %]
+	<td>[% entry.module %]:<strong><a href="/tag/[% entry.tag %]">[% entry.tag %]</a></strong></td>
+	<td>[% entry.level %]</td>
+	<td>[% entry.args %]</td>
+      </tr>
+      [% END %]
+    </tbody>
+  </table>
+</div>
