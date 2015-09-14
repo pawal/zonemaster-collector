@@ -1,8 +1,11 @@
 package TLDMonitor;
-use Dancer ':syntax';
+
+#use Dancer2 ':syntax';
+use Dancer2;
 use MongoDB;
-#use Template::Iterator;
 use TLDMonitor::Log;
+
+our $VERSION = '1.0';
 
 # global options
 my $database = 'results';
@@ -17,8 +20,6 @@ my $mongocoll;
 $mongoclient = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 $mongodb     = $mongoclient->get_database( $database );
 $mongocoll   = $mongodb->get_collection( $collection );
-
-our $VERSION = '1.0';
 
 hook after => sub {
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );

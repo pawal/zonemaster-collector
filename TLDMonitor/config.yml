@@ -14,24 +14,16 @@ layout: "main"
 # about unicode within your app when this setting is set (recommended).
 charset: "UTF-8"
 
-# template engine
-# simple: default and very basic template engine
-# template_toolkit: TT
-
 #template: "simple"
 
 template: "template_toolkit"
 engines:
-  template_toolkit:
-    start_tag: '[%'
-    stop_tag: '%]'
-    PRE_CHOMP: 1
-    POST_CHOMP: 1
-				    
-# engines:
-#   template_toolkit:
-#     start_tag: '[%'
-#     end_tag:   '%]'
+  template:
+    template_toolkit:
+      start_tag: '[%'
+      stop_tag: '%]'
+      PRE_CHOMP: 1
+      POST_CHOMP: 1
 
 # For session support enable the following line and see Dancer::Session
 # session: "YAML"
