@@ -83,7 +83,6 @@ get '/ns/:ns' => sub {
     };
 };
 
-# this is crappy because of how arrays of ASNs are handled
 get '/asn/:asn' => sub {
     my $asn = lc params->{'asn'};
     my $result = $mongocoll->aggregate([

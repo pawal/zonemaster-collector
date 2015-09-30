@@ -30,16 +30,18 @@ sub _format_tags {
     foreach my $key ( keys %{$args} ) {
 	my $content;
 	switch( $key ) {
-	    case 'ns' { $content = "<a href=\"/ns/".$args->{$key}."\">".
-			    $args->{$key}."</a>" }
+	    case 'ns' { $content = "<a href=\"/ns/".$args->{ $key }."\">".
+			    $args->{ $key }."</a>" }
 	    case 'address' { $content = "<a href=\"/address/".
-				 $args->{$key}."\">".$args->{$key}."</a>" }
-	    case 'asn' { $content = "<a href=\"/asn/".
-				 $args->{$key}."\">".$args->{$key}."</a>" }
-	    else { $content = $args->{$key}; }
+				 $args->{ $key }."\">".$args->{ $key }."</a>" }
+	    case 'asn' {
+		foreach ( @{ $args->{ $key } } ) {
+		    $content .= "<a href=\"/asn/$_\">$_</a> ";
+		}
+	    }
+	    else { $content = $args->{ $key }; }
 	}
 	$html .= "$key: $content<br>";
-#	$html .= "$key<br>";
     }
     return $html;
 }
