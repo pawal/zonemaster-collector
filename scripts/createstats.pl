@@ -23,7 +23,7 @@ my $DEBUG = 0;
 my $mongoclient;
 my $mongodb;
 
-# asn->{v4|v6|total}->count
+# asn->{v4|v6|total}->[{asn},{count}]
 sub asnAnalyze {
     my $c = shift;
     my $asnStats;
@@ -68,8 +68,8 @@ sub asnAnalyze {
     return $toplist;
 }
 
-# tags->{critical|errors|warnings ...}->{tag}->count
-sub errorsAnalyze {
+# tags->{critical|errors|warnings ...}->[{tag},{count}]
+sub tagsAnalyze {
     my $c = shift;
     my $errorStats;
 
@@ -106,7 +106,7 @@ sub errorsAnalyze {
     return $toplist;
 }
 
-# tag: ns, {nameserver|v4|v6}->{item}->count
+# tag: ns, {nameserver|v4|v6}->[{ns},{count}]
 sub nsAnalyze {
     my $c = shift;
     my $nsStats;
@@ -164,9 +164,9 @@ sub analyzeCollection {
     my $cstats = $mongodb->get_collection( $coll.$suffix );
     $cstats->drop if not $append;
 
-    writeData( $cstats, asnAnalyze( $c ), 'asn' );
-    writeData( $cstats, errorsAnalyze( $c ), 'errors' );
-    writeData( $cstats, nsAnalyze( $c ), 'ns' );
+    writeData( $cstats, asnAnalyze ( $c ), 'asn' );
+    writeData( $cstats, tagsAnalyze( $c ), 'tags' );
+    writeData( $cstats, nsAnalyze  ( $c ), 'ns' );
 }
 
 sub writeData {
