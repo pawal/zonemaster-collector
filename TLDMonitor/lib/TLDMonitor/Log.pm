@@ -32,6 +32,11 @@ sub _format_tags {
 	switch( $key ) {
 	    case 'ns' { $content = "<a href=\"/ns/".$args->{ $key }."\">".
 			    $args->{ $key }."</a>" }
+	    case 'nsnlist' { $content = join "$_<br/>",split /,/,$args->{ $key } }
+	    case 'nsset'   { $content = join "$_<br/>",split /,/,$args->{ $key } }
+	    case 'glue'    { $content = join "$_<br/>",split /;/,$args->{ $key } }
+	    case 'names'   { $content = join "$_<br/>",split /[;|,]/,$args->{ $key } }
+	    case 'servers'  { $content = join "$_<br/>",split /;/,$args->{ $key } }
 	    case 'address' { $content = "<a href=\"/address/".
 				 $args->{ $key }."\">".$args->{ $key }."</a>" }
 	    case 'asn' {
