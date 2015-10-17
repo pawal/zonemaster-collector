@@ -11,7 +11,8 @@
    global.info     = 0;
 %]
 
-<div class="row fullWidth">
+<div class="row">
+  <div class="medium-12 columns">
   <table id="tldlist" class="display compact" role="grid">
     <thead>
       <tr>
@@ -41,6 +42,8 @@
       [% END %]
     </tbody>
   </table>
+  </div>
+  <div class="medium-12 columns">
   <h3>Total domains: [% counter %]</h3>
   <table id="loglist" class="display compact">
     <thead><tr><th>Log level</th><th>Count</th></tr></thead>
@@ -52,4 +55,5 @@
       <tr><td>INFO</td><td>[% global.info %]</td></tr>
     </tbody>
   </table>
+  </div>
 </div>

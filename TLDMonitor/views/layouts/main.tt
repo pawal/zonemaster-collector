@@ -29,23 +29,24 @@
   <section class="top-bar-section">
     <!-- Right Nav Section -->
     <ul class="right">
-      <li class=""><a href="#">Toplist Errors</a></li>
+      <li class=""><a href="/toplist/asn">Toplist ASN</a></li>
       <li class="divider"></li>
-      <li class=""><a href="#">Toplist Nameservers</a></li>
+      <li class=""><a href="/toplist/ns">Toplist Nameservers</a></li>
+      <li class="divider"></li>
+      <li class=""><a href="/toplist/tags">Toplist Tags</a></li>
       <li class="divider"></li>
       <li class="has-dropdown">
-	<a href="#">Right Button Dropdown</a>
+	<a href="#">About</a>
 	<ul class="dropdown">
-	  <li><a href="#">First link in dropdown</a></li>
-	  <li class="active"><a href="#">Active link in dropdown</a></li>
+	  <li><a href="/about/zonemaster">Zonemaster</a></li>
+	  <li><a href="/about/tldmonitor">TLDMonitor</a></li>
 	</ul>
       </li>
     </ul>
     <ul class="social-icons">
-      <li><a href=""><i class="fi-telephone"></i></a></li>
-      <li><a href=""><i class="fi-social-linkedin"></i></a></li>
-      <li><a href=""><i class="fi-social-twitter"></i></a></li>
-      <li><a href=""><i class="fi-social-facebook"></i></a></li>
+      <li><a href="https://github.com/pawal/zonemaster-collector"><i class="fi-social-github"></i></a></li>
+      <li><a href="https://twitter.com/pawal"><i class="fi-social-twitter"></i></a></li>
+      <li><a href="https://www.linkedin.com/in/pawal"><i class="fi-social-linkedin"></i></a></li>
     </ul>
 
   </section>
