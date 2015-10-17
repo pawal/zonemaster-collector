@@ -18,14 +18,14 @@ sub output {
 	$new->{'level'} = $entry->{'level'};
 	$new->{'module'} = $entry->{'module'};
 	$new->{'tag'} = $entry->{'tag'};
-	$new->{'args'} = _format_tags( $entry->{'args'} );
+	$new->{'args'} = _format_tags( $entry->{'args'}, $entry->{'tag'} );
 	push @output, $new;
     }
     return \@output;
 }
 
 sub _format_tags {
-    my $args = shift;
+    my ( $args, $tag ) = @_;
     my $html;
     foreach my $key ( keys %{$args} ) {
 	my $content;
@@ -35,8 +35,15 @@ sub _format_tags {
 	    case 'address' { $content = "<a href=\"/address/".
 				 $args->{ $key }."\">".$args->{ $key }."</a>" }
 	    case 'asn' {
-		foreach ( @{ $args->{ $key } } ) {
-		    $content .= "<a href=\"/asn/$_\">$_</a> ";
+		if ( $tag eq 'NAMESERVERS_IPV4_WITH_UNIQ_AS' or
+		     $tag eq 'NAMESERVERS_IPV6_WITH_UNIQ_AS' or
+		     $tag eq 'NAMESERVERS_WITH_UNIQ_AS' ) {
+		    $content .= "<a href =\"/asn/".$args->{ $key }."\">".
+			$args->{ $key }."</a> ";
+		} else {
+		    foreach ( @{ $args->{ $key } } ) {
+			$content .= "<a href=\"/asn/$_\">$_</a> ";
+		    }
 		}
 	    }
 	    else { $content = $args->{ $key }; }
