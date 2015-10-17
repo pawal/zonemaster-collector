@@ -1,0 +1,91 @@
+<h1>Toplist Tags</h1>
+
+<div class="row">
+  <div class="medium-6 columns">
+  <h3>ERROR</h3>
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="150" id="label">Tag</th>
+	<th width="150" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.ERROR %]
+      <tr>
+        <th><a href="/tag/[% stat.tag %]">[% stat.tag %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+  </div>
+
+  <div class="medium-6 columns">
+  <h3>WARNING</h3>
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="150" id="label">Tag</th>
+	<th width="150" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.WARNING %]
+      <tr>
+        <th><a href="/tag/[% stat.tag %]">[% stat.tag %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="medium-6 columns">
+  <h3>NOTICE</h3>
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="150" id="label">Tag</th>
+	<th width="150" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.NOTICE %]
+      <tr>
+        <th><a href="/tag/[% stat.tag %]">[% stat.tag %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+</div>
+
+<div class="row">
+  <div class="medium-6 columns">
+  <h3>INFO</h3>
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="150" id="label">Tag</th>
+	<th width="150" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.INFO %]
+      <tr>
+        <th><a href="/tag/[% stat.tag %]">[% stat.tag %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+</div>
+
+</div>

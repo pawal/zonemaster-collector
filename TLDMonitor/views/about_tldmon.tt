@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="medium-12 columns">
+   <h1>About TLDMonitor</h1>
+
+   <p>TLDMonitor was written by <a
+   href="mailto:pawal@blipp.com">Patrik Wallström</a> as a tool for
+   analysis of a large number of Zonemaster measurements. It became a
+   web interface to ease the analysis, and to improve the logging of
+   the Zonemaster output. It is now easy to <strong>cross
+   reference</strong> information between domains, and to
+   <strong>discover anomalies</strong> in domain delegations.</p>
+
+   <p>As for now, TLDMonitor uses the <strong>default Zonemaster
+   policy</strong>.  This policy is not perfect for a TLD zone. One
+   thing it mandates is the use of an MX record for a zone, this
+   should not be allowed for a TLD. The Zonemaster project is
+   developing policies that suits other uses as well.</p>
+
+   <p>The first tool to be written was zonemaster-collect. The purpose
+   of collect is to run Zonemaster on a very large number of domains,
+   and to collect the result in a MongoDB database, or as JSON files
+   on file.</p>
+
+   <p>In order to use the MongoDB data store, the user has to learn
+   how to search the results directly in the database. To easy this, I
+   wrote this tool, TLDMonitor. It is called that, because an easy way
+   to demonstrate the tool is to show off Zonemaster measurements on
+   all TLDs. The tlds.sh tool writes a textfile with all current
+   TLDs.</p>
+
+   <p>All code for TLDMonitor can be found on the Github page: <a
+   href="https://github.com/pawal/zonemaster-collector">zonemaster-collector</a>
+
+</div>
+</div>
