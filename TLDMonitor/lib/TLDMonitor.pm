@@ -20,10 +20,6 @@ my $mongodb;
 $mongoclient = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 $mongodb     = $mongoclient->get_database( $database );
 
-hook after => sub {
-    header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
-};
-
 get '/' => sub {
     my $c = $mongodb->get_collection( $collection );
     my $result = $c->aggregate([
