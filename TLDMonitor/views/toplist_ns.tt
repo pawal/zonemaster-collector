@@ -1,7 +1,7 @@
 <h1>Name Server Toplist</h1>
 
 <div class="row">
-  <div class="medium-4 columns">
+  <div class="medium-5 columns">
   <table id="toplist" class="display compact" role="grid">
     <thead>
       <tr>
@@ -21,12 +21,12 @@
   </table>
 </div>
 
-  <div class="medium-4 columns">
+  <div class="medium-3 columns">
   <table id="toplist" class="display compact" role="grid">
     <thead>
       <tr>
-	<th width="150" id="label">IPv4 ASN</th>
-	<th width="150" id="count">TLD Count</th>
+	<th width="125" id="label">IPv4 ASN</th>
+	<th width="125" id="count">TLD Count</th>
       </tr>
     </thead>
     <tbody>
