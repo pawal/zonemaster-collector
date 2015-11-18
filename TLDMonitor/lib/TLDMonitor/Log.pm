@@ -46,13 +46,16 @@ sub _format_tags {
 		    $content .= "<a href =\"/asn/".$args->{ $key }."\">".
 			$args->{ $key }."</a> ";
 		} else {
-		    foreach ( @{ $args->{ $key } } ) {
-			$content .= "<a href=\"/asn/$_\">$_</a> ";
+		    if ( ref( $args->{ $key } ) eq 'ARRAY' ) {
+			foreach ( @{ $args->{ $key } } ) {
+			    $content .= "<a href=\"/asn/$_\">$_</a> ";
+			}
 		    }
 		}
 	    }
 	    else { $content = $args->{ $key }; }
 	}
+	$content = '' if not defined $content;
 	$html .= "$key: $content<br>";
     }
     return $html;
