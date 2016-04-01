@@ -1,0 +1,10 @@
+<div class="row">
+  <div class="medium-12 columns">
+   <h1>About Zonemaster</h1>
+   <p>Zonemaster is a rewrite of the tools Zonecheck from AFNIC and DNSCheck from IIS.</p>
+   <p>The purpose of Zonemaster is to measure the quality of a DNS delegation.</p>
+
+   <p>More information about the Zonemaster project can be found on the Github page:
+   <a href="https://github.com/dotse/zonemaster">Zonemaster</a></p>
+  </div>
+</div>

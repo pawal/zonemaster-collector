@@ -10,23 +10,19 @@ our $VERSION = '1.0';
 # global options
 my $database = 'results';
 my $collection = 'tlds';
+my $stats = $collection.'_stats';
 
 # runtime variables
 my $mongoclient;
 my $mongodb;
-my $mongocoll;
 
 # Connect to MongoDB
 $mongoclient = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 $mongodb     = $mongoclient->get_database( $database );
-$mongocoll   = $mongodb->get_collection( $collection );
-
-hook after => sub {
-    header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
-};
 
 get '/' => sub {
-    my $result = $mongocoll->aggregate([
+    my $c = $mongodb->get_collection( $collection );
+    my $result = $c->aggregate([
 	{ '$project' => { 'name' => 1, 'level' => 1, '_id' => 0 } },
 	{ '$sort' => { 'name' => 1 } },
     ] );
@@ -35,7 +31,8 @@ get '/' => sub {
 };
 
 get '/domain/:domain' => sub {
-    my $it = $mongocoll->find( {"name" => lc params->{'domain'} } );
+    my $c = $mongodb->get_collection( $collection );
+    my $it = $c->find( {"name" => lc params->{'domain'} } );
     my $log = $it->next;
     my $logarray = $log->{'result'};
     my $logobj = TLDMonitor::Log->new(log => $log);
@@ -47,7 +44,8 @@ get '/domain/:domain' => sub {
 
 get '/tag/:tag' => sub {
     my $tag = uc params->{'tag'};
-    my $result = $mongocoll->aggregate([
+    my $c = $mongodb->get_collection( $collection );
+    my $result = $c->aggregate([
 	{ '$match'   => { 'result.tag' => $tag } },
 	{ '$project' => { 'name' => 1, 'level' => 1, '_id' => 0 } },
 	{ '$sort' => { 'name' => 1 } },
@@ -61,7 +59,8 @@ get '/tag/:tag' => sub {
 
 get '/address/:address' => sub {
     my $address = lc params->{'address'};
-    my $result = $mongocoll->aggregate([
+    my $c = $mongodb->get_collection( $collection );
+    my $result = $c->aggregate([
 	{ '$match'   => { 'result.args.address' => $address } },
 	{ '$sort' => { 'name' => 1 } } ] );
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
@@ -73,7 +72,8 @@ get '/address/:address' => sub {
 
 get '/ns/:ns' => sub {
     my $ns = lc params->{'ns'};
-    my $result = $mongocoll->aggregate([
+    my $c = $mongodb->get_collection( $collection );
+    my $result = $c->aggregate([
 	{ '$match'   => { 'result.args.ns' => $ns } },
 	{ '$sort' => { 'name' => 1 } } ] );
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
@@ -85,7 +85,8 @@ get '/ns/:ns' => sub {
 
 get '/asn/:asn' => sub {
     my $asn = lc params->{'asn'};
-    my $result = $mongocoll->aggregate([
+    my $c = $mongodb->get_collection( $collection );
+    my $result = $c->aggregate([
 	{ '$match'   => { 'result.args.asn' => $asn } },
 	{ '$sort' => { 'name' => 1 } } ] );
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
@@ -95,4 +96,45 @@ get '/asn/:asn' => sub {
     };
 };
 
+get '/toplist/asn' => sub{
+    # connect to stats collection
+    my $c = $mongodb->get_collection( $stats );
+    my $result = $c->aggregate([
+	{ '$match'   => { 'tag' => 'asn' } } ]);
+    header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    template 'toplist_asn', {
+	all => @{$result}[0]->{'data'},
+	stats => 'asn',
+	title => 'ASN Toplists',
+    };
+};
+
+get '/toplist/ns' => sub{
+    # connect to stats collection
+    my $c = $mongodb->get_collection( $stats );
+    my $result = $c->aggregate([
+	{ '$match'   => { 'tag' => 'ns' } } ]);
+    header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    template 'toplist_ns', {
+	all => @{$result}[0]->{'data'},
+	stats => 'ns',
+	title => 'Name Server Toplist',
+    };
+};
+
+get '/toplist/tags' => sub{
+    # connect to stats collection
+    my $c = $mongodb->get_collection( $stats );
+    my $result = $c->aggregate([
+	{ '$match'   => { 'tag' => 'tags' } } ]);
+    header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    template 'toplist_tags', {
+	all => @{$result}[0]->{'data'},
+	stats => 'ns',
+	title => 'Log Tags Toplist',
+    };
+};
+
+get '/about/zonemaster' => sub{ template 'about_zm.tt'; };
+get '/about/tldmonitor' => sub{ template 'about_tldmon.tt'; };
 true;

@@ -1,0 +1,64 @@
+<h1>ASN Toplists</h1>
+
+<div class="row">
+  <div class="medium-4 columns">
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="150" id="label">Aggregated ASN</th>
+	<th width="150" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.total %]
+      <tr>
+        <th><a href="/asn/[% stat.asn %]">[% stat.asn %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+</div>
+
+  <div class="medium-4 columns">
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="150" id="label">IPv4 ASN</th>
+	<th width="150" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.v4 %]
+      <tr>
+        <th><a href="/asn/[% stat.asn %]">[% stat.asn %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+</div>
+
+  <div class="medium-4 columns">
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="150" id="label">IPv6 ASN</th>
+	<th width="150" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.v6 %]
+      <tr>
+        <th><a href="/asn/[% stat.asn %]">[% stat.asn %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+</div>
+
+</div>

@@ -1,0 +1,64 @@
+<h1>Name Server Toplist</h1>
+
+<div class="row">
+  <div class="medium-5 columns">
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="150" id="label">Name servers</th>
+	<th width="150" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.nameserver %]
+      <tr>
+        <th><a href="/ns/[% stat.ns %]">[% stat.ns %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+</div>
+
+  <div class="medium-3 columns">
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="125" id="label">IPv4 ASN</th>
+	<th width="125" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.v4 %]
+      <tr>
+        <th><a href="/address/[% stat.ns %]">[% stat.ns %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+</div>
+
+  <div class="medium-4 columns">
+  <table id="toplist" class="display compact" role="grid">
+    <thead>
+      <tr>
+	<th width="150" id="label">IPv6 ASN</th>
+	<th width="150" id="count">TLD Count</th>
+      </tr>
+    </thead>
+    <tbody>
+    [% SET counter = 0 %]
+    [% FOREACH stat IN all.v6 %]
+      <tr>
+        <th><a href="/address/[% stat.ns %]">[% stat.ns %]</a></th>
+        <th>[% stat.count %]</th>
+      </tr>
+    [% END %]
+    </tbody>
+  </table>
+</div>
+
+</div>
