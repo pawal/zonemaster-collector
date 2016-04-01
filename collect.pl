@@ -72,7 +72,7 @@ sub runTest {
     my ( $domain ) = @_;
     my @log;
     print color 'reset';
-    say threads->tid().": $domain";
+    say threads->tid().": $domain" if defined $filename; # only if many
     eval {
 	Zonemaster->reset();
 	@log = Zonemaster->test_zone( $domain );
@@ -155,7 +155,8 @@ sub main {
     }
 
     if( defined $name ) {
-	my $result = runTest( $name );
+	my ( $result, $level) = runTest( $name );
+	print "Level: $level\n";
 	print Dumper( from_json( $result ) );
     } elsif ( defined $filename or defined $mongo ) {
 	runQueue( $filename );
