@@ -8,6 +8,7 @@ use Switch;
 
 has 'log' => ( is => 'ro', isa => 'HashRef', default => sub { {} } );
 
+# formatted output from the log
 sub output {
     my $self = shift;
 
@@ -24,6 +25,24 @@ sub output {
     return \@output;
 }
 
+# same as above, but without formatting
+sub raw_output {
+    my $self = shift;
+
+    my @output;
+    foreach my $entry ( @{$self->log->{'result'}} ) {
+	next if $entry->{'module'} eq 'SYSTEM';
+	my $new;
+	$new->{'level'} = $entry->{'level'};
+	$new->{'module'} = $entry->{'module'};
+	$new->{'tag'} = $entry->{'tag'};
+	$new->{'args'} = $entry->{'args'};
+	push @output, $new;
+    }
+    return \@output;
+}
+
+# format the tag content
 sub _format_tags {
     my ( $args, $tag ) = @_;
     my $html;

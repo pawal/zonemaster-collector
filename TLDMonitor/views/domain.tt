@@ -34,3 +34,4 @@
     </tbody>
   </table>
 </div>
+<div>This log is also available as <a href="/domain/[% domain %].json">JSON</a>.</div>

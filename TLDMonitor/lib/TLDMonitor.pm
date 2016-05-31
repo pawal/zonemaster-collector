@@ -30,6 +30,17 @@ get '/' => sub {
     template 'index', { all => $result };
 };
 
+get '/domain/:domain.json' => sub {
+    my $c = $mongodb->get_collection( $collection );
+    my $it = $c->find( {"name" => lc params->{'domain'} } );
+    my $log = $it->next;
+    my $logarray = $log->{'result'};
+    my $logobj = TLDMonitor::Log->new(log => $log);
+    header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    header( 'Content-Type'  => 'application/json' );
+    to_json( $logobj->raw_output );
+};
+
 get '/domain/:domain' => sub {
     my $c = $mongodb->get_collection( $collection );
     my $it = $c->find( {"name" => lc params->{'domain'} } );
