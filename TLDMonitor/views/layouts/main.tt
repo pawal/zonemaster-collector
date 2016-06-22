@@ -29,7 +29,7 @@
   <script src="/js/vendor/modernizr.js"></script>
 </head>
 <body>
-<link href="http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet" />
 
 <!-- navigation -->
 
