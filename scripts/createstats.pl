@@ -218,11 +218,11 @@ main();
 
 =head1 NAME
 
-asn.pl
+createstats.pl
 
 =head1 SYNOPSIS
 
-   asn.pl --db database
+   createstats.pl --db database
 
     --help          this help
     --db database   which mongodb database to connect to
