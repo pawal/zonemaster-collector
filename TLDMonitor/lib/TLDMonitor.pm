@@ -8,16 +8,16 @@ use TLDMonitor::Log;
 our $VERSION = '1.0';
 
 # global options
-my $database = 'results';
+my $database   = 'results';
 my $collection = 'tlds';
-my $stats = $collection.'_stats';
+my $stats      = $collection.'_stats';
 
 # runtime variables
 my $mongoclient;
 my $mongodb;
 
 # Connect to MongoDB
-$mongoclient = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+$mongoclient = MongoDB->connect();
 $mongodb     = $mongoclient->get_database( $database );
 
 get '/' => sub {
@@ -27,7 +27,8 @@ get '/' => sub {
 	{ '$sort' => { 'name' => 1 } },
     ] );
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
-    template 'index', { all => $result };
+    my @data = $result->all;
+    template 'index', { all => \@data };
 };
 
 get '/domain/:domain.json' => sub {
@@ -62,8 +63,9 @@ get '/tag/:tag' => sub {
 	{ '$sort' => { 'name' => 1 } },
     ] );
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    my @data = $result->all;
     template 'index', {
-	all => $result,
+	all => \@data,
 	title => "Domains with the tag $tag",
     };
 };
@@ -75,8 +77,9 @@ get '/address/:address' => sub {
 	{ '$match'   => { 'result.args.address' => $address } },
 	{ '$sort' => { 'name' => 1 } } ] );
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    my @data = $result->all;
     template 'index', {
-	all => $result,
+	all => \@data,
 	title => "Domains with the address $address",
     };
 };
@@ -88,8 +91,9 @@ get '/ns/:ns' => sub {
 	{ '$match'   => { 'result.args.ns' => $ns } },
 	{ '$sort' => { 'name' => 1 } } ] );
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    my @data = $result->all;
     template 'index', {
-	all => $result,
+	all => \@data,
 	title => "Domains with the NS $ns",
     };
 };
@@ -101,8 +105,9 @@ get '/asn/:asn' => sub {
 	{ '$match'   => { 'result.args.asn' => $asn } },
 	{ '$sort' => { 'name' => 1 } } ] );
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    my @data = $result->all;
     template 'index', {
-	all => $result,
+	all => \@data,
 	title => "Domains with the ASN $asn",
     };
 };
@@ -113,8 +118,9 @@ get '/toplist/asn' => sub{
     my $result = $c->aggregate([
 	{ '$match'   => { 'tag' => 'asn' } } ]);
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    my @all = $result->all;
     template 'toplist_asn', {
-	all => @{$result}[0]->{'data'},
+	all => $all[0]->{'data'},
 	stats => 'asn',
 	title => 'ASN Toplists',
     };
@@ -126,8 +132,9 @@ get '/toplist/ns' => sub{
     my $result = $c->aggregate([
 	{ '$match'   => { 'tag' => 'ns' } } ]);
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    my @all = $result->all;
     template 'toplist_ns', {
-	all => @{$result}[0]->{'data'},
+	all => $all[0]->{'data'},
 	stats => 'ns',
 	title => 'Name Server Toplist',
     };
@@ -139,8 +146,9 @@ get '/toplist/tags' => sub{
     my $result = $c->aggregate([
 	{ '$match'   => { 'tag' => 'tags' } } ]);
     header( 'Cache-Control' => 'max-age=3600, must-revalidate' );
+    my @all = $result->all;
     template 'toplist_tags', {
-	all => @{$result}[0]->{'data'},
+	all => $all[0]->{'data'},
 	stats => 'ns',
 	title => 'Log Tags Toplist',
     };
