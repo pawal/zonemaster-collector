@@ -1,5 +1,12 @@
 # Zonemaster collector
 
+This is the collection and analysis tool for the Zonemaster DNS delegation
+test tool. The collect.pl program runs Zonemaster::Engine in batch for
+storage in a file system or a MongoDB database.
+
+There is a tool available written in Go for displaying the results:
+https://github.com/pawal/tldmonitor-ui-go
+
 ## Usage
 
 This is a parrallelized collector for performing tests using Zonemaster
