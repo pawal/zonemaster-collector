@@ -6,11 +6,13 @@ use 5.014002;
 use strict;
 use warnings;
 
+use threads;
+use threads::shared;
+use Thread::Queue;
+
 use MongoDB;
 use Zonemaster;
 use Zonemaster::Logger::Entry;
-use Thread;
-use Thread::Queue;
 use Term::ANSIColor;
 use JSON -support_by_pp;
 use Pod::Usage;
