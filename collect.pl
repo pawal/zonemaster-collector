@@ -14,7 +14,7 @@ use MongoDB;
 use Zonemaster;
 use Zonemaster::Logger::Entry;
 use Term::ANSIColor;
-use JSON -support_by_pp;
+use JSON::PP;
 use Pod::Usage;
 use Getopt::Long;
 use Data::Dumper; # not for debugging
@@ -84,7 +84,8 @@ sub runTest {
 	say STDERR "Exited early for $domain: " . $err->message;
     }
     my $maxlevel = Zonemaster::logger->get_max_level();
-    return ( Zonemaster->logger->json( $level ), $maxlevel );
+    my $result = Zonemaster->logger->json( $level );
+    return ( $result, $maxlevel );
 }
 
 sub processDomain {
@@ -113,7 +114,7 @@ sub processDomain {
 	    print OUT $result;
 	    close(OUT);
 	} elsif ( defined $mongo ) {
-	    $result = JSON->new->utf8->decode( $result );
+	    $result = JSON::PP->new->utf8->decode( $result );
 	    $mongocoll->insert( { 'name' => $domain,
 				  'level' => $level,
 				  'result' => $result } );
