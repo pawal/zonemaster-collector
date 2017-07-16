@@ -22,7 +22,7 @@ use Data::Dumper; # not for debugging
 # global program parameters
 my $parallel = 10;      # number of threads
 my $DEBUG    = 0;       # set to true if you want some debug output
-my $level    = 'NOTICE'; # error level (DEBUG, NOTICE, INFO, WARNING, ERROR, CRITICAL)
+my $level    = 'DEBUG'; # error level (DEBUG, NOTICE, INFO, WARNING, ERROR, CRITICAL)
 my $outdir;             # output directory
 my $filename;           # or filename
 my $mongo;              # use MongoDB storage
